@@ -1,10 +1,12 @@
+//go:build cgo
+
 package database
 
 import (
 	"database/sql"
 	"testing"
 
-	"github.com/devfullcycle/20-CleanArch/internal/entity"
+	"github.com/EsdrasSantosDV/desafio-clean-arch-esdras-santos/internal/entity"
 	"github.com/stretchr/testify/suite"
 
 	// sqlite3

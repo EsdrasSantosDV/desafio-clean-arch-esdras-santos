@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/devfullcycle/20-CleanArch/internal/entity"
-	"github.com/devfullcycle/20-CleanArch/internal/usecase"
-	"github.com/devfullcycle/20-CleanArch/pkg/events"
+	"github.com/EsdrasSantosDV/desafio-clean-arch-esdras-santos/internal/entity"
+	"github.com/EsdrasSantosDV/desafio-clean-arch-esdras-santos/internal/usecase"
+	"github.com/EsdrasSantosDV/desafio-clean-arch-esdras-santos/pkg/events"
 )
 
 type WebOrderHandler struct {
@@ -28,6 +28,8 @@ func NewWebOrderHandler(
 }
 
 func (h *WebOrderHandler) Create(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
 	var dto usecase.OrderInputDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
@@ -43,6 +45,22 @@ func (h *WebOrderHandler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 	err = json.NewEncoder(w).Encode(output)
 	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func (h *WebOrderHandler) List(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	listOrders := usecase.NewListOrdersUseCase(h.OrderRepository)
+	output, err := listOrders.Execute()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if err := json.NewEncoder(w).Encode(output); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

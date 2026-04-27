@@ -1,87 +1,56 @@
 # Clean Architecture: Listagem de Orders (REST, gRPC e GraphQL)
 
-## Objetivo
+Desafio de Clean Architecture em Go com um unico use case de listagem de pedidos (`ListOrdersUseCase`) exposto simultaneamente via REST, gRPC e GraphQL.
 
-Neste desafio, voce deve implementar a funcionalidade de Listagem de Orders em sua aplicacao Clean Architecture. O objetivo principal e provar o desacoplamento da arquitetura: voce criara um unico Use Case (`ListOrders`) e o expora atraves de tres interfaces de comunicacao diferentes simultaneamente.
+## Como executar
 
-## Tecnologias e Padroes
-
-- Linguagem: Go (Golang)
-- Arquitetura: Clean Architecture
-- Comunicacao: REST, gRPC e GraphQL
-- Infraestrutura: Docker e Docker Compose
-
-## Requisitos Tecnicos
-
-### Use Case
-
-Crie o caso de uso de listagem de pedidos (`ListOrdersUseCase`).
-
-### Interfaces de Entrada
-
-Disponibilize o acesso a esse Use Case atraves de:
-
-- REST: Endpoint `GET /order`.
-- gRPC: Service `ListOrders`.
-- GraphQL: Query `ListOrders`.
-
-### Banco de Dados
-
-- Crie as migracoes necessarias para criar as tabelas do banco de dados.
-- O banco deve ser provisionado via Docker.
-
-## Requisitos de Dockerizacao (Automacao Total)
-
-O avaliador nao deve executar nenhum comando manual alem do Docker Compose up.
-
-### Container da Aplicacao
-
-Voce deve criar um Dockerfile para a sua aplicacao Go.
-
-### Orquestracao
-
-O `docker-compose.yaml` deve subir o banco de dados e o container da aplicacao.
-
-### Execucao Automatica
-
-Ao rodar o comando:
+Execute apenas:
 
 ```bash
 docker compose up
 ```
 
-- O banco de dados deve subir.
-- As migracoes devem ser aplicadas automaticamente.
-- A aplicacao deve iniciar e ficar disponivel nas portas configuradas.
+O Docker Compose sobe MySQL, RabbitMQ e a aplicacao Go. A aplicacao aguarda o banco ficar pronto, aplica automaticamente a migration `migrations/001_create_orders.sql` e inicia os servidores.
 
-Atencao: garanta que a aplicacao aguarde o banco estar pronto antes de tentar rodar as migracoes ou iniciar (handling de race condition na inicializacao).
+## Portas
 
-## Arquivos Auxiliares
+- REST/Web: `http://localhost:8000`
+- gRPC: `localhost:50051`
+- GraphQL: `http://localhost:8080/query`
+- GraphQL Playground: `http://localhost:8080`
+- RabbitMQ Management: `http://localhost:15672` (`guest` / `guest`)
+- MySQL: `localhost:3306`
 
-Crie um arquivo `api.http` na raiz contendo as requisicoes prontas para:
+## Endpoints
 
-- Criar uma Order (para popular o banco e testar).
-- Listar as Orders (para validar o desafio).
+### REST
 
-## Entregavel
+- Criar order: `POST /order`
+- Listar orders: `GET /order`
 
-Link do Repositorio: o link para o seu repositorio no GitHub.
+### gRPC
 
-## README
+Service: `OrderService`
 
-O arquivo deve conter:
+- `CreateOrder`
+- `ListOrders`
 
-- O comando unico de execucao (`docker compose up`).
-- As portas em que cada servico (Web, gRPC, GraphQL) esta rodando.
+Proto: `internal/infra/grpc/protofiles/order.proto`
 
-## Regras de Entrega
+### GraphQL
 
-### Repositorio Exclusivo (Muito Importante)
+- Mutation: `createOrder`
+- Query: `ListOrders`
 
-Este repositorio deve conter APENAS o codigo deste desafio.
+## Requests prontas
 
-Nao entregue um repositorio "monorepo" contendo pastas de outros cursos ou desafios anteriores. Isso bloqueia o processo de correcao automatica.
+Use o arquivo `api.http` na raiz do projeto para:
 
-### Branch Principal
+- Criar uma order via REST.
+- Listar orders via REST.
+- Criar uma order via GraphQL.
+- Listar orders via GraphQL.
 
-Todo o codigo deve estar na branch `main`.
+## Repositorio
+
+https://github.com/EsdrasSantosDV/desafio-clean-arch-esdras-santos

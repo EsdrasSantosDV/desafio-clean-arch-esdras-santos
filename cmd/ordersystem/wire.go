@@ -6,12 +6,12 @@ package main
 import (
 	"database/sql"
 
-	"github.com/devfullcycle/20-CleanArch/internal/entity"
-	"github.com/devfullcycle/20-CleanArch/internal/event"
-	"github.com/devfullcycle/20-CleanArch/internal/infra/database"
-	"github.com/devfullcycle/20-CleanArch/internal/infra/web"
-	"github.com/devfullcycle/20-CleanArch/internal/usecase"
-	"github.com/devfullcycle/20-CleanArch/pkg/events"
+	"github.com/EsdrasSantosDV/desafio-clean-arch-esdras-santos/internal/entity"
+	"github.com/EsdrasSantosDV/desafio-clean-arch-esdras-santos/internal/event"
+	"github.com/EsdrasSantosDV/desafio-clean-arch-esdras-santos/internal/infra/database"
+	"github.com/EsdrasSantosDV/desafio-clean-arch-esdras-santos/internal/infra/web"
+	"github.com/EsdrasSantosDV/desafio-clean-arch-esdras-santos/internal/usecase"
+	"github.com/EsdrasSantosDV/desafio-clean-arch-esdras-santos/pkg/events"
 	"github.com/google/wire"
 )
 
@@ -39,6 +39,14 @@ func NewCreateOrderUseCase(db *sql.DB, eventDispatcher events.EventDispatcherInt
 		usecase.NewCreateOrderUseCase,
 	)
 	return &usecase.CreateOrderUseCase{}
+}
+
+func NewListOrdersUseCase(db *sql.DB) *usecase.ListOrdersUseCase {
+	wire.Build(
+		setOrderRepositoryDependency,
+		usecase.NewListOrdersUseCase,
+	)
+	return &usecase.ListOrdersUseCase{}
 }
 
 func NewWebOrderHandler(db *sql.DB, eventDispatcher events.EventDispatcherInterface) *web.WebOrderHandler {
